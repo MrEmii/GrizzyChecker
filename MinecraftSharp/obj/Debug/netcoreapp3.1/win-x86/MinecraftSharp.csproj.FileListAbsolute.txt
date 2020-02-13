@@ -1,0 +1,14 @@
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.exe
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.deps.json
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.runtimeconfig.json
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.runtimeconfig.dev.json
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.dll
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/GrizzyChecker.pdb
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/Newtonsoft.Json.dll
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/bin/Debug/netcoreapp3.1/win-x86/xNet.dll
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/MinecraftSharp.csprojAssemblyReference.cache
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/MinecraftSharp.AssemblyInfoInputs.cache
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/MinecraftSharp.AssemblyInfo.cs
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/MinecraftSharp.csproj.CopyComplete
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/GrizzyChecker.dll
+/media/mremii/Projects/MinecraftSharp/MinecraftSharp/obj/Debug/netcoreapp3.1/win-x86/GrizzyChecker.pdb

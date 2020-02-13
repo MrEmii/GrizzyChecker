@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_MinecraftSharp.-1387712580.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="MinecraftSharp" t="IncludeRecursive">
+        <e p="Configuration.cs" t="Include" />
+        <e p="Data.cs" t="Include" />
+        <e p="MinecraftAccount.cs" t="Include" />
+        <e p="MinecraftSharp.csproj" t="IncludeRecursive" />
+        <e p="Program.cs" t="Include" />
+        <e p="Progressbar.cs" t="Include" />
+        <e p="RestAPI.cs" t="Include" />
+        <e p="RestMinecraft.cs" t="Include" />
+        <e p="UvThreadPool.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="MinecraftSharp.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="MinecraftSharp.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
